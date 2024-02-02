@@ -1,9 +1,13 @@
- import Register from "./pages/Register";
+ import Home from "./pages/Home";
+import Login from "./pages/Login";
+import Register from "./pages/Register";
 const App = () => {
   return (
     <> 
     <div>
-    <Register/>
+    {/* <Home/>  */}
+    {/* <Register/>   */}
+    <Login/>
     </div>
     </>
   )
