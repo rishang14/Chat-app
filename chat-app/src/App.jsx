@@ -1,14 +1,9 @@
- import Home from "./pages/Home";
-import Login from "./pages/Login";
-import Register from "./pages/Register";
+import CustomRoute from "./CustomRoute/CustomRoute.JSX";
 const App = () => {
   return (
     <> 
-    <div>
-    {/* <Home/>  */}
-    {/* <Register/>   */}
-    <Login/>
-    </div>
+  
+   <CustomRoute/>
     </>
   )
 };
