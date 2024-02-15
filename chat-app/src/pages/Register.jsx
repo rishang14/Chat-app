@@ -5,19 +5,7 @@ import { doc, setDoc } from "firebase/firestore";
 
 const Register = () => {    
  
-  const handleSubmit = async (e) => {
-    e.preventDefault();
-    const displayName = e.target[0].value;
-    const email = e.target[1].value;
-    const password = e.target[2].value;
-    const file = e.target[3].files[0];
-
-    try {
-      //Create user
-      const res = await createUserWithEmailAndPassword(auth, email, password);
-
-      const date = new Date().getTime();
-      const storageRef = ref(storage, `${displayName + date}`);
+  
 
       await uploadBytesResumable(storageRef, file).then(() => {
         getDownloadURL(storageRef).then(async (downloadURL) => {
