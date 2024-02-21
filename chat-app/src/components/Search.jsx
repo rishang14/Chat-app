@@ -3,28 +3,26 @@ import { db } from "../firebase";
 import { useState } from "react"; 
 
 const Search = () => {
-  const [searchedUser, setSearchedUser] = useState({});
-  const [user, setuser] = useState(false);
-  const [inputField, setInputField] = useState(""); 
-  const [loading, setLoading] = useState(false);
+  const [searchedUser, setSearchedUser] = useState(null);
+  const [inputField, setInputField] = useState("");  
+  const [err, setErr] = useState(false);
 
-  const handleSearch = async () => {
-    setLoading(true);
+  const handleSearch = async () => { 
     const q = query(collection(db, "users"), where("displayName", "==", inputField));  
 
     try {
       const querySnapshot = await getDocs(q);
-      querySnapshot.forEach((doc) => {
-        setSearchedUser(doc.data());
-        setuser(true);
-
-        setTimeout(() => {
-          setLoading(false);
-        }, 4000);
-
-      });
+      if (querySnapshot.empty) {
+        setErr(true); // User not found
+      } else {
+        querySnapshot.forEach((doc) => {
+          setSearchedUser(doc.data());  
+          setErr(false); // Reset error state
+        });
+      }
     } catch (error) {
-      setuser(false);
+      console.error(error);
+      setErr(true); // Set error state if there is an error
     }
   }
 
@@ -42,8 +40,9 @@ const Search = () => {
           onChange={(e) => setInputField(e.target.value)}
         /> 
       </div>
-      {loading && <p>Loading...</p>}
-      {searchedUser.displayName && !loading && (
+      {err ? (
+        <div>not found</div>
+      ) : searchedUser ? (
         <div>
           <div>
             <img className="h-8 w-8" src={searchedUser.photoUrl} alt="hello" />
@@ -52,7 +51,7 @@ const Search = () => {
             </div>
           </div>
         </div>
-      )}
+      ) : null}
     </>
   );
 };
