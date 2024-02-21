@@ -1,14 +1,16 @@
-import React from 'react'
+import React from 'react' 
+import { useAuthAndChatContext } from '../Context/Context'
 
-const Chats = () => {
+const Chats = () => { 
+  const {currentUser}=useAuthAndChatContext()
   return (
     <> 
     <div>
     <div>
-            <img src="" alt="" />  
+            <img className='h-[20px] w-10' src={currentUser.photoURL} alt="" />  
             <div>
-                <span>Display name</span> 
-                <p>Hello</p>
+                <span>{currentUser.displayName}</span> 
+                <p>helo</p>
             </div>
 
           </div>

@@ -1,6 +1,8 @@
 import React from 'react'
+import { useAuthAndChatContext } from '../Context/Context'
 
-const Search = () => {
+const Search = () => { 
+  const {currentUser}=useAuthAndChatContext()
   return (
     <>  
     <div>
@@ -8,9 +10,9 @@ const Search = () => {
          <input type="text"  placeholder='Find a user' />
         </div>  
           <div>
-            <img src="" alt="" />  
+            <img className='h-8 w-8' src={currentUser.photoURL} alt="pic" />  
             <div>
-                <span>Display name</span>
+                <span>{currentUser.displayName}</span>
             </div>
 
           </div>

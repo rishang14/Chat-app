@@ -10,10 +10,10 @@ const CustomRoute = () => {
   return (
     <>
       <Routes>
-        {/* <Route path="/" element={<Login />} />
+        <Route path="/" element={<Login />} />
         <Route element={<ProtectedRoute />}>
           <Route path="/home" element={<Home />} />
-        </Route> */}
+        </Route>
         <Route path="/signUp" element={<Register />} />
       </Routes>
     </>

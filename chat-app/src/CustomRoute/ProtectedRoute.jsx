@@ -1,10 +1,11 @@
-
+import { useAuthAndChatContext } from "../Context/Context"; 
+import { Outlet,Navigate } from "react-router-dom";
 
 const ProtectedRoute = ({  }) => {
-  // const { user } = useAuth();
+  const { currentUser } = useAuthAndChatContext();
 
-  // // If the user is authenticated, render the original element, otherwise, redirect to the login page
-  // return user ? <Outlet /> : <Navigate to="/" />;
+  // If the user is authenticated, render the original element, otherwise, redirect to the login page
+  return currentUser ? <Outlet /> : <Navigate to="/" />;
 };
 
 export default ProtectedRoute;
