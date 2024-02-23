@@ -6,12 +6,12 @@ import { useAuthAndChatContext } from "../Context/Context";
 const Nav = () => {
   const { currentUser } = useAuthAndChatContext();
   return (
-    <div>
-      <div>CHIT-CHAT</div>
-      <div>
-        <img className="h-8 w-8" src={currentUser.photoURL} alt="Dp" />
+    <div className="flex items-center h-[50px] p-[10px] justify-between  ">
+      <span className="font-bold">CHIT-CHAT</span>
+      <div className="flex gap-[10px]">
+        <img className="h-[24px] w-[24px] rounded-full object-cover" src={currentUser.photoURL} alt="Dp" />
         <span>{currentUser.displayName}</span>
-        <button onClick={() => signOut(auth)}>Logout</button>
+        <button className="text-[10px] border-none" onClick={() => signOut(auth)}>Logout</button>
       </div>
     </div>
   );

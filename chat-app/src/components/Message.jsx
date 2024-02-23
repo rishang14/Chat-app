@@ -1,14 +1,17 @@
-const Message = () => {
+ import { useAuthAndChatContext } from "../Context/Context"; 
+ import "../components/messagestyle.style.scss";
+const Message = () => { 
+  const {currentUser} =useAuthAndChatContext()
   return (
     <>
-      <div>
-        <div>
-          <img src="" alt="" /> 
+      <div className="message owner">
+        <div className="messageInfo">
+          <img   src={currentUser.photoURL} alt="" /> 
           <span>Just now</span>
         </div>
-        <div>
-       <p>heelo</p> 
-       <img src="" alt="msg" />
+        <div className="messageContent" >
+       <p >Hello i am Rishang </p> 
+       {/* <img src={currentUser.photoURL} alt="msg" /> */}
         </div>
       </div>
     </>
