@@ -11,7 +11,7 @@ const Nav = () => {
       <div className="flex gap-[10px]">
         <img className="h-[24px] w-[24px] rounded-full object-cover" src={currentUser.photoURL} alt="Dp" />
         <span>{currentUser.displayName}</span>
-        <button className="text-[10px] border-none" onClick={() => signOut(auth)}>Logout</button>
+        <button className="text-[10px] p-2 border-none rounded-md bg-cyan-500" onClick={() => signOut(auth)}>Logout</button>
       </div>
     </div>
   );

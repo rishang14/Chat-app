@@ -11,7 +11,9 @@ const Chats = () => {
      
     const getchats =()=>{
      const unsub= onSnapshot(doc(db, "usersChat", currentUser.uid), (doc) => {
-        setChats(doc.data())
+        setChats(doc.data())  
+        
+
   });  
   return ()=>{
     unsub()
@@ -29,7 +31,7 @@ const Chats = () => {
     <> 
     <div>
    {
-    Object.entries(chats)?.map((chat)=>{
+    Object.entries(chats).sort((a,b)=>b[1].date - a[1].date)?.map((chat)=>{
       return (
         <div key={chat[0]} onClick={()=>handleSelect(chat[1].userInfo)} className="p-[10px] flex items-center gap-[10px] cursor-pointer hover:bg-slate-300">
         <img
@@ -39,7 +41,7 @@ const Chats = () => {
         /> 
         <div>
         <span className="text-[18px] font-[500]">{chat[1].userInfo.displayName}</span> 
-        <p className="text-[14px] ">{chat[1].userInfo.lastMessage?.text}</p>
+        <p className="text-[14px] ">{chat[1].lastMessage?.text}</p>
 
         </div>
       </div>

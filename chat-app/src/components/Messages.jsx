@@ -25,7 +25,7 @@ const Messages = () => {
      <div style={{ height: 'calc(100% - 120px)', overflowY:"scroll",scrollbarWidth:'thin' }} className='bg-gray-300 p-[10px] '>
         {
           messages.map((m)=>(
-             <Message messages={m}/>
+             <Message messages={m} key={m.id}/>
           ))
         } 
      </div>

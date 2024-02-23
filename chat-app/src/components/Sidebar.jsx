@@ -5,7 +5,7 @@ import Search from './Search'
 const Sidebar = () => {
   return (
     <> 
-    <div className='flex-1 border-r border-solid border-1 border-black '>
+    <div className='  w-[400px] border-r border-solid border-1 border-black '>
         <Nav/> 
         <Search/> 
         <Chats/>
