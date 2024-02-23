@@ -1,4 +1,14 @@
-import { collection, query, where, getDocs, setDoc, doc, getDoc } from "firebase/firestore";
+import {
+  collection,
+  query,
+  where,
+  getDocs,
+  setDoc,
+  doc,
+  getDoc,
+  updateDoc,
+  serverTimestamp,
+} from "firebase/firestore";
 import { db } from "../firebase";
 import { useState } from "react";
 import { useAuthAndChatContext } from "../Context/Context";
@@ -6,13 +16,64 @@ import { useAuthAndChatContext } from "../Context/Context";
 const Search = () => {
   const [searchedUser, setSearchedUser] = useState(null);
   const [inputField, setInputField] = useState("");
-  const [err, setErr] = useState(false); 
-  const {currentUser}=useAuthAndChatContext()
+  const [err, setErr] = useState(false);
+  const { currentUser } = useAuthAndChatContext();
 
+  const handleSelect = async () => {
+    const combineId =
+      currentUser.uid > searchedUser.uid
+        ? currentUser.uid + searchedUser.uid
+        : searchedUser.uid + currentUser.uid
+    try {
+      const res = await getDoc(doc(db, "chats", combineId));
+     
+
+      // create chat in chats collection
+      if (!res.exists()) {
+        await setDoc(doc(db, "chats", combineId), { messages: [] });
+      }
+
+      // creating userschat
+      const currentUserRef = doc(db, "usersChat", currentUser.uid);
+      const searchedUserRef = doc(db, "usersChat", searchedUser.uid);
+
+      // Ensure that searchedUser and searchedUser.photoUrl are defined
+      if (currentUser && currentUser.photoURL) {
+        await updateDoc(currentUserRef, {
+          [combineId]: {
+            userInfo: {
+              uid: searchedUser.uid,
+              displayName: searchedUser.displayName,
+              photoUrl: searchedUser.photoUrl,
+            },
+            date: serverTimestamp(),
+          },
+        });
+
+        await updateDoc(searchedUserRef, {
+          [combineId]: {
+            userInfo: {
+              uid: currentUser.uid,
+              displayName: currentUser.displayName,
+              photoUrl: currentUser.photoURL,
+            },
+            date: serverTimestamp(),
+          },
+        });
+      }
+    } catch (error) {
+     setErr(true)
+
+    }
+  };
+
+  const handlekey = (e) => {
+    e.code === "Enter" && handleSearch();
+  };
   const handleSearch = async () => {
     const q = query(
       collection(db, "users"),
-      where("displayName", "==", inputField)
+      where("displayName", "==", inputField.trim())
     );
 
     try {
@@ -31,33 +92,6 @@ const Search = () => {
     }
   };
 
-  const handlekey = (e) => {
-    e.code === "Enter" && handleSearch();
-  }; 
-   
-  const handleSelect=async()=>{  
-    // create a chats in chat collection  
-    const combineId=currentUser.uid >searchedUser.uid ? currentUser.uid +searchedUser.uid :searchedUser.uid + currentUser.uid
-  
-    try{
-      const res=await getDoc(db,"chats",combineId)   
-       
-      // create chats if not exist  
-      if( !res.exists()) {
-        await setDoc(doc(db,"chats",combineId),{messages:[]})
-      }
-
-    }catch(error){
-
-    }
-     
-
-
-
-
-
-  }
-
   return (
     <>
       <div className="border-b border-gray-900">
@@ -70,19 +104,22 @@ const Search = () => {
             onChange={(e) => setInputField(e.target.value)}
           />
         </div>
-        {err ? (
-          <div>not found</div>
-        ) : searchedUser ? (
-          <div className="p-[10px] flex items-center gap-[10px] cursor-pointer hover:bg-slate-300" onClick={handleSelect}>
-            <img
-              className="h-[50px] w-[50px] rounded-full object-cover"
-              src={searchedUser.photoUrl}
-              alt="hello"
-            />
-            <span>{searchedUser.displayName}</span>
-          </div>
-        ) : null}
       </div>
+      {err ? (
+        <div>not found</div>
+      ) : searchedUser ? (
+        <div
+          className="p-[10px] flex items-center gap-[10px] cursor-pointer hover:bg-slate-300"
+          onClick={() => handleSelect()}
+        >
+          <img
+            className="h-[50px] w-[50px] rounded-full object-cover"
+            src={searchedUser.photoUrl}
+            alt="hello"
+          />
+          <span>{searchedUser.displayName}</span>
+        </div>
+      ) : null}
     </>
   );
 };
