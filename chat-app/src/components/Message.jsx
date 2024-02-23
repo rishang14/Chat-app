@@ -1,7 +1,10 @@
- import { useAuthAndChatContext } from "../Context/Context"; 
+
+import { useAuthAndChatContext } from "../Context/Context"; 
  import "../components/messagestyle.style.scss";
-const Message = () => { 
-  const {currentUser} =useAuthAndChatContext()
+
+const Message = ({messages}) => { 
+  const {currentUser,data} =useAuthAndChatContext() 
+  
   return (
     <>
       <div className="message owner">

@@ -1,7 +1,11 @@
-import React from "react";
+import React, { useState } from "react";
 import { HiOutlineDocumentAdd } from "react-icons/hi";
+import { useAuthAndChatContext } from "../Context/Context";
 
-const Input = () => {
+const Input = () => {  
+  const [text,setText]=useState(""); 
+  const [img,setImg]=useState(null)
+  const {currentUser,data}=useAuthAndChatContext()
   return (
     <>
       <div className="h-[70px] p-[10px] flex items-center justify-between">

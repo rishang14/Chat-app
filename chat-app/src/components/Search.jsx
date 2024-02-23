@@ -12,12 +12,14 @@ import {
 import { db } from "../firebase";
 import { useState } from "react";
 import { useAuthAndChatContext } from "../Context/Context";
+import Loader from "./Loader";
 
 const Search = () => {
   const [searchedUser, setSearchedUser] = useState(null);
   const [inputField, setInputField] = useState("");
   const [err, setErr] = useState(false);
-  const { currentUser } = useAuthAndChatContext();
+  const { currentUser } = useAuthAndChatContext(); 
+  const [loading,setLoading]=useState(false)
 
   const handleSelect = async () => {
     const combineId =
@@ -26,17 +28,13 @@ const Search = () => {
         : searchedUser.uid + currentUser.uid
     try {
       const res = await getDoc(doc(db, "chats", combineId));
-     
-
       // create chat in chats collection
       if (!res.exists()) {
         await setDoc(doc(db, "chats", combineId), { messages: [] });
       }
-
       // creating userschat
       const currentUserRef = doc(db, "usersChat", currentUser.uid);
       const searchedUserRef = doc(db, "usersChat", searchedUser.uid);
-
       // Ensure that searchedUser and searchedUser.photoUrl are defined
       if (currentUser && currentUser.photoURL) {
         await updateDoc(currentUserRef, {
@@ -62,20 +60,34 @@ const Search = () => {
         });
       }
     } catch (error) {
-     setErr(true)
+     setSearchedUser(null) 
+     setInputField('')
 
     }
+  }; 
+  const handleInputChange = (e) => {
+    setInputField(e.target.value);
+    setErr(false); // Hide error message when user starts typing again
+    setSearchedUser(null) 
+                       
+  }; 
+  
+  
+  const handlekey = async (e) => {
+    if (e.code === "Enter") {
+      setLoading(true);
+      await handleSearch();
+      setLoading(false); 
+      
+    }
   };
-
-  const handlekey = (e) => {
-    e.code === "Enter" && handleSearch();
-  };
-  const handleSearch = async () => {
+  
+  const handleSearch = async () => {  
+    
     const q = query(
       collection(db, "users"),
       where("displayName", "==", inputField.trim())
     );
-
     try {
       const querySnapshot = await getDocs(q);
       if (querySnapshot.empty) {
@@ -83,12 +95,14 @@ const Search = () => {
       } else {
         querySnapshot.forEach((doc) => {
           setSearchedUser(doc.data());
-          setErr(false); // Reset error state
+        
+          setErr(false); // Reset error state 
         });
       }
-    } catch (error) {
-      console.error(error);
-      setErr(true); // Set error state if there is an error
+    } catch (error) { 
+      setLoading(false)
+      setErr(true); // Set error state if there is an error  
+
     }
   };
 
@@ -101,12 +115,16 @@ const Search = () => {
             type="text"
             placeholder="Find a user"
             onKeyDown={handlekey}
-            onChange={(e) => setInputField(e.target.value)}
+            onChange={handleInputChange} 
+            value={inputField}
           />
         </div>
-      </div>
-      {err ? (
-        <div>not found</div>
+      
+
+      { loading ? <Loader/> :
+      
+      err ? (
+        <div  >not found</div>
       ) : searchedUser ? (
         <div
           className="p-[10px] flex items-center gap-[10px] cursor-pointer hover:bg-slate-300"
@@ -119,9 +137,9 @@ const Search = () => {
           />
           <span>{searchedUser.displayName}</span>
         </div>
-      ) : null}
+      ) : null} 
+      </div> 
     </>
   );
-};
-
+}; 
 export default Search;
