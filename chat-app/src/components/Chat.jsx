@@ -4,12 +4,12 @@ import { useAuthAndChatContext } from "../Context/Context";
 import { FcVideoCall, FcMissedCall } from "react-icons/fc";
 import { IoIosMore } from "react-icons/io";
 const Chat = () => {
-  const { currentUser } = useAuthAndChatContext();
+  const { data} = useAuthAndChatContext();
   return (
     <>
       <div className="flex-grow ">
         <div className="h-[50px] flex items-center justify-between p-[10px]">
-          <span>{currentUser.displayName}</span>
+          <span>{data.user.displayName}</span>
           {/* For future */}
           <div className="flex gap-[10px]">
             <button>
