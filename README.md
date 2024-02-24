@@ -1,6 +1,6 @@
 # Chit Chat
 
-Chit Chat is a real-time chat application built with React.js, Tailwind CSS, and Firebase. Users can easily sign up or log in using Firebase authentication, and the application provides a seamless chatting experience.
+Chit Chat is a real-time chat application built with React.js, Tailwind CSS, and Firebase. Users can easily sign up or log in using Firebase authentication, and the application provides a seamless chatting experience. [Live Link](https://chit-chats-app.netlify.app)
 
 ## Features
 
