@@ -6,68 +6,78 @@ import { db, storage } from "../firebase";
 import {v4 as uuid } from "uuid"
 import { getDownloadURL, ref, uploadBytesResumable } from "firebase/storage";
 
-const Input = () => {  
-  const [text,setText]=useState(""); 
-  const [img,setImg]=useState(null)
-  const {currentUser,data}=useAuthAndChatContext() 
-   
+
+ 
+const Input = () => {
+  const [text, setText] = useState("");
+  const [img, setImg] = useState(null);
+  const [loading, setLoading] = useState(false); // Add loading state
+  const { currentUser, data } = useAuthAndChatContext();
+
   const handleSend = async () => {
-    if (img) {
-      const imageRef = ref(storage, uuid());
-  
-      await uploadBytesResumable(imageRef, img).then(() => {
-        getDownloadURL(imageRef).then(async (downloadURL) => {
-          await updateDoc(doc(db, "chats", data.chatID), {
-            messages: arrayUnion({
-              id: uuid(),
-              text,
-              senderId: currentUser.uid,
-              date: Timestamp.now(),
-              img: downloadURL,
-            }),
-          });
-          // Set state after the updateDoc call
-          setImg(null);
-          setText("");
-        });
-      });
-    } else {
-      await updateDoc(doc(db, "chats", data.chatID), {
-        messages: arrayUnion({
+    try {
+      setLoading(true); // Set loading to true when starting the send operation
+
+      if (text || img) {
+        const messageData = {
           id: uuid(),
           text,
           senderId: currentUser.uid,
           date: Timestamp.now(),
-        }),
-      }); 
-      await updateDoc(doc(db,"usersChat",currentUser.uid),{
-        [data.chatID + ".lastMessage"]:{
-          text
-        },
-        [data.chatID + ".date"]:serverTimestamp()
-      }) 
-      await updateDoc(doc(db,"usersChat",data.user.uid),{
-        [data.chatID + ".lastMessage"]:{
-          text
-        },
-        [data.chatID + ".date"]:serverTimestamp()
-      }) 
+        };
 
-      setImg(null);
-      setText("");
+        if (img) {
+          const imageRef = ref(storage, uuid());
+
+          await uploadBytesResumable(imageRef, img);
+          const downloadURL = await getDownloadURL(imageRef);
+
+          messageData.img = downloadURL;
+        }
+
+        if (text && img) {
+          await updateDoc(doc(db, "chats", data.chatID), {
+            messages: arrayUnion(messageData),
+          });
+        } else {
+          await updateDoc(doc(db, "chats", data.chatID), {
+            messages: arrayUnion(messageData),
+          });
+        }
+
+        const lastMessageData = {
+          [data.chatID + ".lastMessage"]: {
+            text,
+          },
+          [data.chatID + ".date"]: serverTimestamp(),
+        };
+
+        await updateDoc(doc(db, "usersChat", currentUser.uid), lastMessageData);
+        await updateDoc(doc(db, "usersChat", data.user.uid), lastMessageData);
+
+        setImg(null);
+        setText("");
+      }
+    } catch (error) {
+      console.error("Error sending message:", error);
+      // Handle error as needed
+    } finally {
+      setLoading(false); // Set loading to false when the operation is complete
     }
   };
-  
+
   return (
     <>
       <div className="h-[70px] p-[10px] flex items-center justify-between">
-        <input type="text" className="w-[100%] border-none outline-none text-[18px] " value={text}  placeholder=" Type Something "  onChange={(e)=> setText(e.target.value)}/>
+        <input type="text" className="w-[100%] border-none outline-none text-[18px] " value={text} placeholder=" Type Something " onChange={(e) => setText(e.target.value)} />
         <div className=" flex items-center gap-[10px]">
-          <input  type="file" style={{ display: "none" }}  id="file" onChange={(e)=>setImg(e.target.files[0])} />
+          <input type="file" style={{ display: "none" }} id="file" onChange={(e) => setImg(e.target.files[0])} />
           <label htmlFor="file">
             <HiOutlineDocumentAdd size={25} className=" cursor-pointer" />
           </label>
-          <button onClick={handleSend} className="py-[10px] px-[15px] bg-cyan-300">Send</button>
+          <button onClick={handleSend} className="py-[10px] px-[15px] bg-cyan-300">
+            {loading ? "Sending..." : "Send"}
+          </button>
         </div>
       </div>
     </>

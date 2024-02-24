@@ -84,7 +84,15 @@ const Login = () => {
               </button>
             </div>
           </form>
-        </div> 
+        </div>   
+        <div className="flex justify-center flex-col">
+        <span className="text-center"> *Create 2ac search 2nd ac then msg or *</span> 
+        <span className="text-center">Rishang</span> 
+        <span className="text-center">Harry</span>
+        <span className="text-center">Paras</span>
+
+        </div>
+
         <p className="text-center">Dont Have an Account ?  <Link to={"/signUp"}> <span className="text-[20px] underline"> Click Here</span>  </Link></p>
       </div>
     </div>

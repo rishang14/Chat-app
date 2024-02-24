@@ -42,7 +42,6 @@ const Register = () => {
               displayName,
               photoURL: downloadURl,
             });
-            console.log("2");
             // create user in firestore
             await setDoc(doc(db, "users", res.user.uid), {
               uid: res.user.uid,
@@ -53,7 +52,6 @@ const Register = () => {
 
             //  create empty userchats on firestore
             await setDoc(doc(db, "usersChat", res.user.uid), {});
-            alert("Signup Completed");
             resetformfeild(e);
 
             navigate("/");
