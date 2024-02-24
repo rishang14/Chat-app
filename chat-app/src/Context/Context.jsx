@@ -5,7 +5,8 @@ import { auth } from "../firebase";
 const Context = createContext();
 
 export const AuthProvider = ({ children }) => {
-  const [currentUser, setCurrentUseer] = useState({}); 
+  const [currentUser, setCurrentUseer] = useState({});  
+  const [showChat,setShowChat] =useState(false)
 
   useEffect(() => {
     const unsub = onAuthStateChanged(auth, (user) => {
@@ -40,7 +41,7 @@ export const AuthProvider = ({ children }) => {
          
     
   return (
-    <Context.Provider value={{ currentUser,data:state,dispatch }}>{children}</Context.Provider>
+    <Context.Provider value={{ currentUser,data:state,dispatch ,setShowChat,showChat}}>{children}</Context.Provider>
   );
 };
 

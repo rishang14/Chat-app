@@ -4,7 +4,6 @@ import { useAuthAndChatContext } from "../Context/Context";
  import "../components/messagestyle.style.scss";
 
 const Message = ({messages}) => {  
-  console.log(messages)
   const {currentUser,data} =useAuthAndChatContext() 
   
     const ref=useRef( )

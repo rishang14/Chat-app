@@ -21,7 +21,7 @@ const Search = () => {
   const { currentUser } = useAuthAndChatContext(); 
   const [loading,setLoading]=useState(false)
 
-  const handleSelect = async () => { 
+  const handleSelect = async () => {  
     const combineId =
       currentUser.uid > searchedUser.uid
         ? currentUser.uid + searchedUser.uid
