@@ -27,4 +27,3 @@ Feel free to contribute and provide feedback!
 - React.js
 - Tailwind CSS
 - Firebase
-- 
